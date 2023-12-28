@@ -1,1 +1,197 @@
-<h1>Hello World!</h1>
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>時計</title>
+    <!-- CSSファイル読み込み -->
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="clock.svg" />
+  </head>
+  <body>
+    <noscript>
+      <h1 style="color: #169873">Javascriptを有効にしてお使いください。</h1>
+    </noscript>
+    <div class="container">
+      <div class="clock">
+        <p class="clock-date"></p>
+        <p class="clock-time"></p>
+      </div>
+    </div>
+    <button class="button-019" title="フィードバックを送信" onclick="feed()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="48"
+        viewBox="0 -960 960 960"
+        width="48"
+      >
+        <path
+          d="M480-367q14 0 23.5-9.5T513-400q0-14-9.5-23.5T480-433q-14 0-23.5 9.5T447-400q0 14 9.5 23.5T480-367Zm-30-142h60v-251h-60v251ZM80-80v-740q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H240L80-80Z"
+        />
+      </svg>
+    </button>
+    <div class="switch">
+      <input id="js_mode_toggle" type="checkbox" />
+      <label class="switch-mode" for="js_mode_toggle" id="js_rotate">
+        <span id="switch-mode-dark" title="ダークモード">
+          <svg
+            class="feather feather-moon"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </span>
+        <span id="switch-mode-light" title="ライトモード">
+          <svg
+            color="#26a79a"
+            class="feather feather-sun"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" x2="12" y1="1" y2="3" />
+            <line x1="12" x2="12" y1="21" y2="23" />
+            <line x1="4.22" x2="5.64" y1="4.22" y2="5.64" />
+            <line x1="18.36" x2="19.78" y1="18.36" y2="19.78" />
+            <line x1="1" x2="3" y1="12" y2="12" />
+            <line x1="21" x2="23" y1="12" y2="12" />
+            <line x1="4.22" x2="5.64" y1="19.78" y2="18.36" />
+            <line x1="18.36" x2="19.78" y1="5.64" y2="4.22" />
+          </svg>
+        </span>
+      </label>
+    </div>
+    <p style="text-align: right">V.0.0.0</p>
+    <!-- JavaScriptファイル読み込み -->
+    <script src="clock.js"></script>
+  </body>
+</html>
+
+<style>
+  body {
+    background: var(--bg);
+    transition-duration: 0.3s;
+    transition-property: color, background-color;
+    position: relative;
+  }
+  p {
+    color: var(--color);
+  }
+  /*ダークモード*/
+  :root {
+    --bg: #333;
+    --color: #eee;
+  }
+  /*ライトモード*/
+  :root[data-theme-mode="light"] {
+    --bg: #eee;
+    --color: #333;
+  }
+  /* モード切り替えボタン */
+  input[type="checkbox"] {
+    display: none;
+  }
+  .switch {
+    position: absolute;
+    top: 1em;
+    right: 2em;
+  }
+  .switch label {
+    cursor: pointer;
+  }
+  .switch svg {
+    height: 24px;
+    width: 24px;
+    color: var(--color);
+    transition: 0.3s;
+  }
+  #switch-mode-dark svg {
+    transform: scale(-1, 1);
+  }
+  #switch-mode-dark {
+    display: none;
+  }
+  #js_mode_toggle:checked ~ label #switch-mode-dark {
+    display: initial;
+  }
+  #js_mode_toggle:checked ~ label #switch-mode-light {
+    display: none;
+  }
+  .button-019 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background-color: #26a79a;
+    fill: #fff;
+    cursor: pointer;
+  }
+</style>
+<script>
+  const checkToggle = document.getElementById("js_mode_toggle");
+  const rotateIcon = document.getElementById("js_rotate");
+  const isLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+  const keyLocalStorage = "demoKey";
+  const localTheme = localStorage.getItem(keyLocalStorage);
+  let nowRotate = 0;
+  if (localTheme === "light") {
+    rotateInfinite();
+    changeMode("light");
+  } else if (localTheme === "dark") {
+    changeMode("dark");
+  } else if (isLight) {
+    rotateInfinite();
+    changeMode("light");
+  }
+  checkToggle.addEventListener("change", function (e) {
+    rotateInfinite();
+    if (e.target.checked) {
+      changeMode("light");
+      localStorage.setItem(keyLocalStorage, "light");
+    } else {
+      changeMode("dark");
+      localStorage.setItem(keyLocalStorage, "dark");
+    }
+  });
+
+  function changeMode(mode) {
+    if (mode === "light") {
+      document.documentElement.setAttribute("data-theme-mode", "light");
+      checkToggle.checked = true;
+    } else if (mode === "dark") {
+      document.documentElement.setAttribute("data-theme-mode", "dark");
+      checkToggle.checked = false;
+    }
+  }
+
+  function rotateInfinite() {
+    nowRotate += 180;
+    rotateIcon.style.transform = "rotate(" + nowRotate + "deg)";
+  }
+
+  function feed() {
+    window.open(
+      "https://forms.gle/TDnn79FtYrHmYJKS6",
+      null,
+      "width=400,height=1000,toolbar=yes,menubar=yes,scrollbars=yes"
+    );
+  }
+</script>
