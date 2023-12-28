@@ -1,6 +1,6 @@
 # clock
 ## 使い方
-1.https://penguin-123456.github.ioを開きます。
+1.https://penguin-123456.github.io(https://penguin-123456.github.io) を開きます。
 2.じっくりとご鑑賞ください。
 ## 問題点がある場合
 問題点がある場合は、下の方にある緑色のボタンを押してください。
