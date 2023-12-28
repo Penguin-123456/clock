@@ -1,0 +1,19 @@
+/* 全体を囲うコンテナー */
+body {
+  background-color: #303f43;
+}
+
+/* 時計の共通スタイル */
+.clock {
+  text-align: center;
+}
+
+/* 日付のスタイル */
+.clock-date {
+  font-size: 5rem;
+}
+
+/* 時間のスタイル */
+.clock-time {
+  font-size: 10rem;
+}
